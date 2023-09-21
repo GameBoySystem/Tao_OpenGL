@@ -28,26 +28,26 @@
         /// </summary>
         private void InitializeComponent()
         {
-            this.anT = new Tao.Platform.Windows.SimpleOpenGlControl();
+            this.AnT = new Tao.Platform.Windows.SimpleOpenGlControl();
             this.button1 = new System.Windows.Forms.Button();
             this.button2 = new System.Windows.Forms.Button();
             this.SuspendLayout();
             // 
-            // anT
+            // AnT
             // 
-            this.anT.AccumBits = ((byte)(0));
-            this.anT.AutoCheckErrors = false;
-            this.anT.AutoFinish = false;
-            this.anT.AutoMakeCurrent = true;
-            this.anT.AutoSwapBuffers = true;
-            this.anT.BackColor = System.Drawing.Color.Black;
-            this.anT.ColorBits = ((byte)(32));
-            this.anT.DepthBits = ((byte)(16));
-            this.anT.Location = new System.Drawing.Point(12, 12);
-            this.anT.Name = "anT";
-            this.anT.Size = new System.Drawing.Size(776, 355);
-            this.anT.StencilBits = ((byte)(0));
-            this.anT.TabIndex = 0;
+            this.AnT.AccumBits = ((byte)(0));
+            this.AnT.AutoCheckErrors = false;
+            this.AnT.AutoFinish = false;
+            this.AnT.AutoMakeCurrent = true;
+            this.AnT.AutoSwapBuffers = true;
+            this.AnT.BackColor = System.Drawing.Color.Black;
+            this.AnT.ColorBits = ((byte)(32));
+            this.AnT.DepthBits = ((byte)(16));
+            this.AnT.Location = new System.Drawing.Point(12, 12);
+            this.AnT.Name = "AnT";
+            this.AnT.Size = new System.Drawing.Size(776, 355);
+            this.AnT.StencilBits = ((byte)(0));
+            this.AnT.TabIndex = 0;
             // 
             // button1
             // 
@@ -80,7 +80,7 @@
             this.ClientSize = new System.Drawing.Size(800, 455);
             this.Controls.Add(this.button2);
             this.Controls.Add(this.button1);
-            this.Controls.Add(this.anT);
+            this.Controls.Add(this.AnT);
             this.Name = "Form1";
             this.Text = "Form1";
             this.Load += new System.EventHandler(this.Form1_Load);
@@ -91,7 +91,7 @@
 
         #endregion
 
-        private Tao.Platform.Windows.SimpleOpenGlControl anT;
+        private Tao.Platform.Windows.SimpleOpenGlControl AnT;
         private System.Windows.Forms.Button button1;
         private System.Windows.Forms.Button button2;
     }
