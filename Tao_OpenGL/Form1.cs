@@ -18,7 +18,7 @@ namespace Tao_OpenGL
         public Form1()
         {
             InitializeComponent();
-            anT.InitializeContexts();
+            AnT.InitializeContexts();
         }
 
         private void Form1_Load(object sender, EventArgs e)
@@ -26,10 +26,10 @@ namespace Tao_OpenGL
             Glut.glutInit();
             Glut.glutInitDisplayMode(Glut.GLUT_RGB | Glut.GLUT_DOUBLE | Glut.GLUT_DEPTH);
             Gl.glClearColor(0.2f, 0.2f, 0.2f, 1.0f);
-            Gl.glViewport(0, 0, anT.Width, anT.Height);
+            Gl.glViewport(0, 0, AnT.Width, AnT.Height);
             Gl.glMatrixMode(Gl.GL_PROJECTION);
             Gl.glLoadIdentity();
-            Glu.gluPerspective(45, (float)anT.Width / (float)anT.Height, 0.1, 200);
+            Glu.gluPerspective(45, (float)AnT.Width / (float)AnT.Height, 0.1, 200);
             Gl.glMatrixMode(Gl.GL_MODELVIEW);
             Gl.glLoadIdentity();
             Gl.glEnable(Gl.GL_DEPTH_TEST);
@@ -50,7 +50,7 @@ namespace Tao_OpenGL
 
             Gl.glPopMatrix();
             Gl.glFlush();
-            anT.Invalidate();
+            AnT.Invalidate();
         }
 
         private void button2_Click(object sender, EventArgs e)
