@@ -21,42 +21,58 @@ namespace Tao_OpenGL
             AnT.InitializeContexts();
         }
 
+        private anEngine ProgrammDrawingEngine;
+
+
+
         private void Form1_Load(object sender, EventArgs e)
         {
+            // инициализация библиотеки GLUT
             Glut.glutInit();
+            // инициализация режима окна
             Glut.glutInitDisplayMode(Glut.GLUT_RGB | Glut.GLUT_DOUBLE | Glut.GLUT_DEPTH);
-            Gl.glClearColor(0.2f, 0.2f, 0.2f, 1.0f);
+            // устанавливаем цвет очистки окна
+            Gl.glClearColor(255, 255, 255, 1);
+            // устанавливаем порт вывода, основываясь на размерах элемента управления AnT
             Gl.glViewport(0, 0, AnT.Width, AnT.Height);
+            // устанавливаем проекционную матрицу 
             Gl.glMatrixMode(Gl.GL_PROJECTION);
+            // очищаем ее
             Gl.glLoadIdentity();
-            Glu.gluPerspective(45, (float)AnT.Width / (float)AnT.Height, 0.1, 200);
+            Glu.gluOrtho2D(0.0, AnT.Width, 0.0, AnT.Height);
+            // переходим к объектно-видовой матрице 
             Gl.glMatrixMode(Gl.GL_MODELVIEW);
-            Gl.glLoadIdentity();
-            Gl.glEnable(Gl.GL_DEPTH_TEST);
+            ProgrammDrawingEngine = new anEngine(AnT.Width, AnT.Height, AnT.Width, AnT.Height);
+            RenderTimer.Start();
         }
 
-        private void button1_Click(object sender, EventArgs e)
+        private void RenderTimer_Tick(object sender, EventArgs e)
         {
+            Drawing();
+        }
+
+        // функция рисования
+        private void Drawing()
+        {
+            // очистка буфера цвета и буфера глубины
             Gl.glClear(Gl.GL_COLOR_BUFFER_BIT | Gl.GL_DEPTH_BUFFER_BIT);
-
+            // очищение текущей матрицы
             Gl.glLoadIdentity();
-            Gl.glColor3f(0, 1.0f, 0);
-
-            Gl.glPushMatrix();
-            Gl.glTranslated(0, 0, -6);
-            Gl.glRotated(45, 1, 1, 0);
-
-            Glut.glutWireSphere(2, 48, 48);
-
-            Gl.glPopMatrix();
+            // установка черного цвета
+            Gl.glColor3f(0, 0, 0);
+            // визуализация изображения из движка
+            ProgrammDrawingEngine.SwapImage();
+            // дожидаемся завершения визуализации кадра
             Gl.glFlush();
+            // сигнал для обновление элемента, реализующего визуализацию. 
             AnT.Invalidate();
         }
 
-        private void button2_Click(object sender, EventArgs e)
+        private void AnT_MouseMove(object sender, MouseEventArgs e)
         {
-            Application.Exit();
+            //если нажата левая клавиша мыши 
+            if (e.Button == MouseButtons.Left) 
+                ProgrammDrawingEngine.Drawing(e.X, AnT.Height - e.Y);
         }
-
     }
 }
