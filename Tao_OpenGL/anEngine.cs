@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
 using System.Drawing;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -21,31 +22,60 @@ namespace Tao_OpenGL
         // что в будущем мы добавим возможность загрузки кистей
         // из графических файлов с расширением bmp. 
         public Bitmap myBrush;
-        // конструктор класса 
-        public anBrush()
+
+        // стандартная(квадратная) кисть, с указанием масштаба
+        // и флагом закраски углов
+        public anBrush(int Value, bool Special)
         {
-            // создаем плоскость 4х4 пикселя 
-            myBrush = new Bitmap(4, 4);
-            // заполняем все пиксели красным цветом
-            // (все пиксели красного цвета мы будем считать не значимыми, 
-            // а черного – значимыми при рисования кистью 
-            // для установки пискеля, как видно из кода, используется функция SetPixel. 
-            for (int ax = 0; ax < 4; ax++)
-                for (int bx = 0; bx < 4; bx++)
-                    myBrush.SetPixel(ax, bx, Color.Red);
-            // далее в данном массиве мы рисуем крестик
-            myBrush.SetPixel(0, 1, Color.Black);
-            myBrush.SetPixel(0, 2, Color.Black);
-            myBrush.SetPixel(1, 0, Color.Black);
-            myBrush.SetPixel(1, 1, Color.Black);
-            myBrush.SetPixel(1, 2, Color.Black);
-            myBrush.SetPixel(1, 3, Color.Black);
-            myBrush.SetPixel(2, 0, Color.Black);
-            myBrush.SetPixel(2, 1, Color.Black);
-            myBrush.SetPixel(2, 2, Color.Black);
-            myBrush.SetPixel(2, 3, Color.Black);
-            myBrush.SetPixel(3, 1, Color.Black);
-            myBrush.SetPixel(3, 2, Color.Black);
+            if (!Special)
+            {
+                myBrush = new Bitmap(Value, Value);
+                for (int ax = 0; ax < Value; ax++) for (int bx = 0; bx < Value; bx++)
+                        myBrush.SetPixel(0, 0, Color.Black);
+            }
+
+            else
+            {
+                // здесь мы будем размещать предустановленные кисти
+                // созданная нами ранее кисть в виде перекрестия двух линий будет кистью по умолчанию
+                // на тот случай, если задан не описанный номер кисти
+                switch (Value)
+                {
+                    default:
+                        {
+                            // создаем плоскость 4х4 пикселя 
+                            myBrush = new Bitmap(4, 4);
+                            // заполняем все пиксели красным цветом
+                            // (все пиксели красного цвета мы будем считать не значимыми, 
+                            // а черного – значимыми при рисования кистью 
+                            // для установки пискеля, как видно из кода, используется функция SetPixel. 
+                            for (int ax = 0; ax < 4; ax++)
+                                for (int bx = 0; bx < 4; bx++)
+                                    myBrush.SetPixel(ax, bx, Color.Red);
+                            myBrush.SetPixel(0, 1, Color.Black);
+                            myBrush.SetPixel(0, 2, Color.Black);
+                            myBrush.SetPixel(1, 0, Color.Black);
+                            myBrush.SetPixel(1, 1, Color.Black);
+                            myBrush.SetPixel(1, 2, Color.Black);
+                            myBrush.SetPixel(1, 3, Color.Black);
+                            myBrush.SetPixel(2, 0, Color.Black);
+                            myBrush.SetPixel(2, 1, Color.Black);
+                            myBrush.SetPixel(2, 2, Color.Black);
+                            myBrush.SetPixel(2, 3, Color.Black);
+                            myBrush.SetPixel(3, 1, Color.Black);
+                            myBrush.SetPixel(3, 2, Color.Black);
+
+                            break;
+                        }
+                }
+            }
+        }
+        // второй конструктор будет позволять загружать кисть из стороннего файла 
+        public anBrush(string FromFile)
+        {
+            string path = Directory.GetCurrentDirectory();
+            path += "\\" + FromFile;
+            myBrush = new Bitmap(path);
         }
     }
 
@@ -54,9 +84,9 @@ namespace Tao_OpenGL
         // размеры экранной области 
         public int Width, Heigth;
         // массив, представляющий область рисунка (координаты пикселя и его цвет), 
-        private int[,,] DrawPlace;
+        private float[,,] DrawPlace;
         // который будет хранить растровые данные для данного слоя 
-        public int[,,] GetDrawingPlace() { return DrawPlace; }
+        public float[,,] GetDrawingPlace() { return DrawPlace; }
         // флаг видимости слоя: true - видимый, false - невидимый 
         private bool isVisible;
         // текущий установленный цвет 
@@ -71,7 +101,7 @@ namespace Tao_OpenGL
             // создаем в памяти массив, соответствующий размерам рисунка 
             // каждая точка на плоскости массива будет иметь 3 составляющие цвета 
             // + 4 ячейка - флаг, о том что данный пиксель пуст (или полностью прозрачен) 
-            DrawPlace = new int[Width, Heigth, 4];
+            DrawPlace = new float[Width, Heigth, 4];
             // проходим по всей плоскости и устанавливаем всем точкам флаг, 
             // сигнализирующий, что они прозрачны 
             for (int ax = 0; ax < Width; ax++)
@@ -127,9 +157,12 @@ namespace Tao_OpenGL
                     if (!(ret.R == 255 && ret.G == 0 && ret.B == 0))
                     {
                         // заполняем данный пиксель соответствующим из маски, используя активный цвет 
-                        DrawPlace[ax, bx, 0] = ActiveColor.R;
-                        DrawPlace[ax, bx, 1] = ActiveColor.G;
-                        DrawPlace[ax, bx, 2] = ActiveColor.B;
+                        DrawPlace[ax, bx, 0] = (float)(Convert.ToDouble(ActiveColor.R) / 255);
+                        //Console.WriteLine(DrawPlace[ax, bx, 0]);
+                        //Console.WriteLine(DrawPlace[ax, bx, 1]);
+                        //Console.WriteLine(DrawPlace[ax, bx, 2]);
+                        DrawPlace[ax, bx, 1] = (float)(Convert.ToDouble(ActiveColor.G) / 255);
+                        DrawPlace[ax, bx, 2] = (float)(Convert.ToDouble(ActiveColor.B) / 255);
                         DrawPlace[ax, bx, 3] = 0;
                     }
                 }
@@ -161,6 +194,11 @@ namespace Tao_OpenGL
             // завершаем режим рисования 
             Gl.glEnd();
         }
+        // установка текущего цвета для рисования в слое
+        public void SetColor(Color NewColor)
+        {
+            ActiveColor = NewColor;
+        }
     }
 
 
@@ -179,6 +217,8 @@ namespace Tao_OpenGL
         private ArrayList Layers = new ArrayList();
         // стандартная кисть
         private anBrush standartBrush;
+        // последний установленный цвет
+        private Color LastColorInUse;
         // конструктор класса
         public anEngine(int size_x, int size_y, int screen_w, int screen_h)
         {
@@ -196,7 +236,7 @@ namespace Tao_OpenGL
             // номер активного слоя - 0
             ActiveLayerNom = 0;
             // и создадим стандартную кисть
-            standartBrush = new anBrush();
+            standartBrush = new anBrush(3, false);
         }
         // функция для установки номера активного слоя 
         public void SetActiveLayerNom(int nom)
@@ -221,6 +261,28 @@ namespace Tao_OpenGL
             ((anLayer)Layers[0]).RenderImage();
 
         }
-
+        // функция установки стандартной кисти, передается только размер 
+        public void SetStandartBrush(int SizeB)
+        {
+            standartBrush = new anBrush(SizeB, false);
+        }
+        // функция установки специальной кисти 
+        public void SetSpecialBrush(int Nom)
+        {
+            standartBrush = new anBrush(Nom, true);
+        }
+        // установка кисти из файла 
+        public void SetBrushFromFile(string FileName)
+        {
+            standartBrush = new anBrush(FileName);
+        }
+        // функция установки активного цвета 
+        public void SetColor(Color NewColor)
+        {
+            ((anLayer)Layers[ActiveLayerNom]).SetColor(NewColor);
+            LastColorInUse = NewColor;
+        }
     }
+
+
 }

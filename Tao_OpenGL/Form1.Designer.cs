@@ -29,6 +29,7 @@
         private void InitializeComponent()
         {
             this.components = new System.ComponentModel.Container();
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Form1));
             this.menuStrip1 = new System.Windows.Forms.MenuStrip();
             this.файлToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.новыйРисунокToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -50,6 +51,11 @@
             this.AnT = new Tao.Platform.Windows.SimpleOpenGlControl();
             this.checkedListBox1 = new System.Windows.Forms.CheckedListBox();
             this.RenderTimer = new System.Windows.Forms.Timer(this.components);
+            this.changeColor = new System.Windows.Forms.ColorDialog();
+            this.color1 = new System.Windows.Forms.Panel();
+            this.color2 = new System.Windows.Forms.Panel();
+            this.label1 = new System.Windows.Forms.Label();
+            this.linkLabel1 = new System.Windows.Forms.LinkLabel();
             this.menuStrip1.SuspendLayout();
             this.flowLayoutPanel1.SuspendLayout();
             this.flowLayoutPanel2.SuspendLayout();
@@ -81,13 +87,13 @@
             // новыйРисунокToolStripMenuItem
             // 
             this.новыйРисунокToolStripMenuItem.Name = "новыйРисунокToolStripMenuItem";
-            this.новыйРисунокToolStripMenuItem.Size = new System.Drawing.Size(224, 26);
+            this.новыйРисунокToolStripMenuItem.Size = new System.Drawing.Size(201, 26);
             this.новыйРисунокToolStripMenuItem.Text = "Новый рисунок";
             // 
             // выходToolStripMenuItem
             // 
             this.выходToolStripMenuItem.Name = "выходToolStripMenuItem";
-            this.выходToolStripMenuItem.Size = new System.Drawing.Size(224, 26);
+            this.выходToolStripMenuItem.Size = new System.Drawing.Size(201, 26);
             this.выходToolStripMenuItem.Text = "Выход";
             // 
             // инструментыToolStripMenuItem
@@ -103,19 +109,19 @@
             // карандашToolStripMenuItem
             // 
             this.карандашToolStripMenuItem.Name = "карандашToolStripMenuItem";
-            this.карандашToolStripMenuItem.Size = new System.Drawing.Size(224, 26);
+            this.карандашToolStripMenuItem.Size = new System.Drawing.Size(163, 26);
             this.карандашToolStripMenuItem.Text = "Карандаш";
             // 
             // кистьToolStripMenuItem
             // 
             this.кистьToolStripMenuItem.Name = "кистьToolStripMenuItem";
-            this.кистьToolStripMenuItem.Size = new System.Drawing.Size(224, 26);
+            this.кистьToolStripMenuItem.Size = new System.Drawing.Size(163, 26);
             this.кистьToolStripMenuItem.Text = "Кисть";
             // 
             // ластикToolStripMenuItem
             // 
             this.ластикToolStripMenuItem.Name = "ластикToolStripMenuItem";
-            this.ластикToolStripMenuItem.Size = new System.Drawing.Size(224, 26);
+            this.ластикToolStripMenuItem.Size = new System.Drawing.Size(163, 26);
             this.ластикToolStripMenuItem.Text = "Ластик";
             // 
             // слоиToolStripMenuItem
@@ -154,27 +160,36 @@
             // 
             // button1
             // 
+            this.button1.Cursor = System.Windows.Forms.Cursors.Hand;
+            this.button1.Image = ((System.Drawing.Image)(resources.GetObject("button1.Image")));
             this.button1.Location = new System.Drawing.Point(3, 3);
             this.button1.Name = "button1";
             this.button1.Size = new System.Drawing.Size(36, 36);
             this.button1.TabIndex = 0;
             this.button1.UseVisualStyleBackColor = true;
+            this.button1.Click += new System.EventHandler(this.button1_Click);
             // 
             // button2
             // 
+            this.button2.Cursor = System.Windows.Forms.Cursors.Hand;
+            this.button2.Image = ((System.Drawing.Image)(resources.GetObject("button2.Image")));
             this.button2.Location = new System.Drawing.Point(3, 45);
             this.button2.Name = "button2";
             this.button2.Size = new System.Drawing.Size(36, 36);
             this.button2.TabIndex = 3;
             this.button2.UseVisualStyleBackColor = true;
+            this.button2.Click += new System.EventHandler(this.button2_Click);
             // 
             // button3
             // 
+            this.button3.Cursor = System.Windows.Forms.Cursors.Hand;
+            this.button3.Image = ((System.Drawing.Image)(resources.GetObject("button3.Image")));
             this.button3.Location = new System.Drawing.Point(3, 87);
             this.button3.Name = "button3";
             this.button3.Size = new System.Drawing.Size(36, 36);
             this.button3.TabIndex = 4;
             this.button3.UseVisualStyleBackColor = true;
+            this.button3.Click += new System.EventHandler(this.button3_Click);
             // 
             // flowLayoutPanel2
             // 
@@ -190,6 +205,7 @@
             // 
             // button10
             // 
+            this.button10.Cursor = System.Windows.Forms.Cursors.Hand;
             this.button10.Location = new System.Drawing.Point(3, 3);
             this.button10.Name = "button10";
             this.button10.Size = new System.Drawing.Size(36, 36);
@@ -198,6 +214,7 @@
             // 
             // button11
             // 
+            this.button11.Cursor = System.Windows.Forms.Cursors.Hand;
             this.button11.Location = new System.Drawing.Point(3, 45);
             this.button11.Name = "button11";
             this.button11.Size = new System.Drawing.Size(36, 36);
@@ -216,6 +233,7 @@
             this.AnT.AutoSwapBuffers = true;
             this.AnT.BackColor = System.Drawing.Color.Black;
             this.AnT.ColorBits = ((byte)(32));
+            this.AnT.Cursor = System.Windows.Forms.Cursors.Cross;
             this.AnT.DepthBits = ((byte)(16));
             this.AnT.Location = new System.Drawing.Point(45, 31);
             this.AnT.Name = "AnT";
@@ -228,10 +246,11 @@
             // 
             this.checkedListBox1.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Right)));
+            this.checkedListBox1.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
             this.checkedListBox1.FormattingEnabled = true;
             this.checkedListBox1.Location = new System.Drawing.Point(901, 31);
             this.checkedListBox1.Name = "checkedListBox1";
-            this.checkedListBox1.Size = new System.Drawing.Size(217, 718);
+            this.checkedListBox1.Size = new System.Drawing.Size(217, 344);
             this.checkedListBox1.TabIndex = 7;
             // 
             // RenderTimer
@@ -239,16 +258,63 @@
             this.RenderTimer.Interval = 30;
             this.RenderTimer.Tick += new System.EventHandler(this.RenderTimer_Tick);
             // 
+            // color1
+            // 
+            this.color1.BackColor = System.Drawing.Color.Black;
+            this.color1.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.color1.Cursor = System.Windows.Forms.Cursors.Hand;
+            this.color1.Location = new System.Drawing.Point(908, 421);
+            this.color1.Name = "color1";
+            this.color1.Size = new System.Drawing.Size(50, 50);
+            this.color1.TabIndex = 8;
+            this.color1.MouseClick += new System.Windows.Forms.MouseEventHandler(this.color1_MouseClick);
+            // 
+            // color2
+            // 
+            this.color2.BackColor = System.Drawing.Color.White;
+            this.color2.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.color2.Location = new System.Drawing.Point(931, 443);
+            this.color2.Name = "color2";
+            this.color2.Size = new System.Drawing.Size(50, 50);
+            this.color2.TabIndex = 9;
+            // 
+            // label1
+            // 
+            this.label1.AutoSize = true;
+            this.label1.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+            this.label1.Location = new System.Drawing.Point(911, 390);
+            this.label1.Name = "label1";
+            this.label1.Size = new System.Drawing.Size(107, 20);
+            this.label1.TabIndex = 10;
+            this.label1.Text = "Текущий цвет:";
+            // 
+            // linkLabel1
+            // 
+            this.linkLabel1.AutoSize = true;
+            this.linkLabel1.Cursor = System.Windows.Forms.Cursors.Hand;
+            this.linkLabel1.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+            this.linkLabel1.Location = new System.Drawing.Point(997, 427);
+            this.linkLabel1.Name = "linkLabel1";
+            this.linkLabel1.Size = new System.Drawing.Size(79, 20);
+            this.linkLabel1.TabIndex = 11;
+            this.linkLabel1.TabStop = true;
+            this.linkLabel1.Text = "Поменять";
+            this.linkLabel1.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.linkLabel1_LinkClicked);
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(1164, 758);
+            this.Controls.Add(this.linkLabel1);
+            this.Controls.Add(this.label1);
+            this.Controls.Add(this.color1);
             this.Controls.Add(this.checkedListBox1);
             this.Controls.Add(this.AnT);
             this.Controls.Add(this.flowLayoutPanel1);
             this.Controls.Add(this.menuStrip1);
             this.Controls.Add(this.flowLayoutPanel2);
+            this.Controls.Add(this.color2);
             this.MainMenuStrip = this.menuStrip1;
             this.Name = "Form1";
             this.Text = "Form1";
@@ -285,6 +351,11 @@
         private Tao.Platform.Windows.SimpleOpenGlControl AnT;
         private System.Windows.Forms.CheckedListBox checkedListBox1;
         private System.Windows.Forms.Timer RenderTimer;
+        private System.Windows.Forms.ColorDialog changeColor;
+        private System.Windows.Forms.Panel color1;
+        private System.Windows.Forms.Panel color2;
+        private System.Windows.Forms.Label label1;
+        private System.Windows.Forms.LinkLabel linkLabel1;
     }
 }
 
