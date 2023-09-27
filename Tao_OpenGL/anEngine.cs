@@ -23,6 +23,12 @@ namespace Tao_OpenGL
         // из графических файлов с расширением bmp. 
         public Bitmap myBrush;
 
+        // флаг, сигнализирующий о том, что установленная кисть является стеркой 
+        private bool IsErase = false;
+        // функция, которая будет использоваться для получения информации
+        // о том, является ли данная кисть стеркой. 
+        public bool IsBrushErase() { return IsErase; }
+
         // стандартная(квадратная) кисть, с указанием масштаба
         // и флагом закраски углов
         public anBrush(int Value, bool Special)
@@ -32,6 +38,7 @@ namespace Tao_OpenGL
                 myBrush = new Bitmap(Value, Value);
                 for (int ax = 0; ax < Value; ax++) for (int bx = 0; bx < Value; bx++)
                         myBrush.SetPixel(0, 0, Color.Black);
+                IsErase = false;
             }
 
             else
@@ -65,6 +72,16 @@ namespace Tao_OpenGL
                             myBrush.SetPixel(3, 1, Color.Black);
                             myBrush.SetPixel(3, 2, Color.Black);
 
+                            IsErase = false;
+
+                            break;
+                        }
+                    case 1:
+                        {
+                            myBrush = new Bitmap(5, 5);
+                            for (int ax = 0; ax < Value; ax++) for (int bx = 0; bx < Value; bx++)
+                                    myBrush.SetPixel(0, 0, Color.Black);
+                            IsErase = true;
                             break;
                         }
                 }
@@ -148,22 +165,38 @@ namespace Tao_OpenGL
             for (int ax = real_pos_draw_start_x; ax < boundary_x; ax++, count_x++)
             {
                 count_y = 0;
-                for (int bx = real_pos_draw_start_y;
-                    bx < boundary_y; bx++, count_y++)
+                for (int bx = real_pos_draw_start_y; bx < boundary_y; bx++, count_y++)
                 {
-                    // получаем текущий цвет пикселя маски 
-                    Color ret = BR.myBrush.GetPixel(count_x, count_y);
-                    // цвет не красный 
-                    if (!(ret.R == 255 && ret.G == 0 && ret.B == 0))
+                    if (BR.IsBrushErase())
                     {
-                        // заполняем данный пиксель соответствующим из маски, используя активный цвет 
-                        DrawPlace[ax, bx, 0] = (float)(Convert.ToDouble(ActiveColor.R) / 255);
-                        //Console.WriteLine(DrawPlace[ax, bx, 0]);
-                        //Console.WriteLine(DrawPlace[ax, bx, 1]);
-                        //Console.WriteLine(DrawPlace[ax, bx, 2]);
-                        DrawPlace[ax, bx, 1] = (float)(Convert.ToDouble(ActiveColor.G) / 255);
-                        DrawPlace[ax, bx, 2] = (float)(Convert.ToDouble(ActiveColor.B) / 255);
-                        DrawPlace[ax, bx, 3] = 0;
+                        // данная кисть - стерка. 
+                        // помечаем данный пиксель как не закрашенный 
+                        // получаем текущий цвет пикселя маски 
+                        Color ret = BR.myBrush.GetPixel(count_x, count_y);
+                        // цвет не красный 
+                        if (!(ret.R == 255 && ret.G == 0 && ret.B == 0))
+                        {
+                            // заполняем данный пиксель соответствующим из маски,
+                            // используя активный цвет 
+                            DrawPlace[ax, bx, 3] = 1;
+                        }
+                    }
+                    else
+                    {
+                        // получаем текущий цвет пикселя маски 
+                        Color ret = BR.myBrush.GetPixel(count_x, count_y);
+                        // цвет не красный 
+                        if (!(ret.R == 255 && ret.G == 0 && ret.B == 0))
+                        {
+                            // заполняем данный пиксель соответствующим из маски, используя активный цвет 
+                            DrawPlace[ax, bx, 0] = (float)(Convert.ToDouble(ActiveColor.R) / 255);
+                            //Console.WriteLine(DrawPlace[ax, bx, 0]);
+                            //Console.WriteLine(DrawPlace[ax, bx, 1]);
+                            //Console.WriteLine(DrawPlace[ax, bx, 2]);
+                            DrawPlace[ax, bx, 1] = (float)(Convert.ToDouble(ActiveColor.G) / 255);
+                            DrawPlace[ax, bx, 2] = (float)(Convert.ToDouble(ActiveColor.B) / 255);
+                            DrawPlace[ax, bx, 3] = 0;
+                        }
                     }
                 }
             }
@@ -198,6 +231,11 @@ namespace Tao_OpenGL
         public void SetColor(Color NewColor)
         {
             ActiveColor = NewColor;
+        }
+        // получение текущего активного цвета
+        public Color GetColor()
+        {
+            return ActiveColor;
         }
     }
 
@@ -241,6 +279,9 @@ namespace Tao_OpenGL
         // функция для установки номера активного слоя 
         public void SetActiveLayerNom(int nom)
         {
+            // новый активный слой получает установленный активный цвет для предыдущего активного слоя 
+            ((anLayer)Layers[nom]).SetColor(((anLayer)Layers[ActiveLayerNom]).GetColor());
+            // установка номера активного слоя
             ActiveLayerNom = nom;
         }
         //установка видимости / невидимости слоя
@@ -252,14 +293,14 @@ namespace Tao_OpenGL
         public void Drawing(int x, int y)
         {
             // транслируем координаты, в которых проходит рисование, стандартной кистью 
-            ((anLayer)Layers[0]).Draw(standartBrush, x, y);
+            ((anLayer)Layers[ActiveLayerNom]).Draw(standartBrush, x, y);
         }
         // визуализация
         public void SwapImage()
         {
-            // вызываем функцию визуализации в нашем слое
-            ((anLayer)Layers[0]).RenderImage();
-
+            // вызываем функцию визуализации в нашем слое для всех существующих слоев 
+            for (int ax = 0; ax < Layers.Count; ax++)
+                ((anLayer)Layers[ax]).RenderImage();
         }
         // функция установки стандартной кисти, передается только размер 
         public void SetStandartBrush(int SizeB)
@@ -282,7 +323,29 @@ namespace Tao_OpenGL
             ((anLayer)Layers[ActiveLayerNom]).SetColor(NewColor);
             LastColorInUse = NewColor;
         }
+        // функция добавления слоя 
+        public void AddLayer()
+        {
+            // добавляем слой в массив слоев ArrayList 
+            int AddingLayer = Layers.Add(new anLayer(picture_size_x, picture_size_y));
+            // устанавливаем его активным 
+            SetActiveLayerNom(AddingLayer);
+        }
+        // функция удаления слоев 
+        public void RemoveLayer(int nom)
+        {
+            // если номер корректен (в диапазоне добавленных в ArrayList 
+            if (nom < Layers.Count && nom >= 0)
+            {
+                // делаем активным слой 0 
+                SetActiveLayerNom(0);
+
+                // очищаем дисплейный список данного слоя 
+                //((anLayer)Layers[nom]).ClearList();
+
+                // удаляем запись о слое 
+                Layers.RemoveAt(nom);
+            }
+        }
     }
-
-
 }

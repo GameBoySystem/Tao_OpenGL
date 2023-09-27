@@ -49,13 +49,14 @@
             this.button10 = new System.Windows.Forms.Button();
             this.button11 = new System.Windows.Forms.Button();
             this.AnT = new Tao.Platform.Windows.SimpleOpenGlControl();
-            this.checkedListBox1 = new System.Windows.Forms.CheckedListBox();
+            this.LayersControl = new System.Windows.Forms.CheckedListBox();
             this.RenderTimer = new System.Windows.Forms.Timer(this.components);
             this.changeColor = new System.Windows.Forms.ColorDialog();
             this.color1 = new System.Windows.Forms.Panel();
             this.color2 = new System.Windows.Forms.Panel();
             this.label1 = new System.Windows.Forms.Label();
             this.linkLabel1 = new System.Windows.Forms.LinkLabel();
+            this.button4 = new System.Windows.Forms.Button();
             this.menuStrip1.SuspendLayout();
             this.flowLayoutPanel1.SuspendLayout();
             this.flowLayoutPanel2.SuspendLayout();
@@ -109,20 +110,23 @@
             // карандашToolStripMenuItem
             // 
             this.карандашToolStripMenuItem.Name = "карандашToolStripMenuItem";
-            this.карандашToolStripMenuItem.Size = new System.Drawing.Size(163, 26);
+            this.карандашToolStripMenuItem.Size = new System.Drawing.Size(224, 26);
             this.карандашToolStripMenuItem.Text = "Карандаш";
+            this.карандашToolStripMenuItem.Click += new System.EventHandler(this.карандашToolStripMenuItem_Click);
             // 
             // кистьToolStripMenuItem
             // 
             this.кистьToolStripMenuItem.Name = "кистьToolStripMenuItem";
-            this.кистьToolStripMenuItem.Size = new System.Drawing.Size(163, 26);
+            this.кистьToolStripMenuItem.Size = new System.Drawing.Size(224, 26);
             this.кистьToolStripMenuItem.Text = "Кисть";
+            this.кистьToolStripMenuItem.Click += new System.EventHandler(this.кистьToolStripMenuItem_Click);
             // 
             // ластикToolStripMenuItem
             // 
             this.ластикToolStripMenuItem.Name = "ластикToolStripMenuItem";
-            this.ластикToolStripMenuItem.Size = new System.Drawing.Size(163, 26);
+            this.ластикToolStripMenuItem.Size = new System.Drawing.Size(224, 26);
             this.ластикToolStripMenuItem.Text = "Ластик";
+            this.ластикToolStripMenuItem.Click += new System.EventHandler(this.ластикToolStripMenuItem_Click);
             // 
             // слоиToolStripMenuItem
             // 
@@ -138,12 +142,14 @@
             this.добавитьСлойToolStripMenuItem.Name = "добавитьСлойToolStripMenuItem";
             this.добавитьСлойToolStripMenuItem.Size = new System.Drawing.Size(224, 26);
             this.добавитьСлойToolStripMenuItem.Text = "Добавить слой";
+            this.добавитьСлойToolStripMenuItem.Click += new System.EventHandler(this.добавитьСлойToolStripMenuItem_Click);
             // 
             // удалитьСлойToolStripMenuItem
             // 
             this.удалитьСлойToolStripMenuItem.Name = "удалитьСлойToolStripMenuItem";
             this.удалитьСлойToolStripMenuItem.Size = new System.Drawing.Size(224, 26);
             this.удалитьСлойToolStripMenuItem.Text = "Удалить слой";
+            this.удалитьСлойToolStripMenuItem.Click += new System.EventHandler(this.удалитьСлойToolStripMenuItem_Click);
             // 
             // flowLayoutPanel1
             // 
@@ -152,6 +158,7 @@
             this.flowLayoutPanel1.Controls.Add(this.button1);
             this.flowLayoutPanel1.Controls.Add(this.button2);
             this.flowLayoutPanel1.Controls.Add(this.button3);
+            this.flowLayoutPanel1.Controls.Add(this.button4);
             this.flowLayoutPanel1.FlowDirection = System.Windows.Forms.FlowDirection.TopDown;
             this.flowLayoutPanel1.Location = new System.Drawing.Point(0, 28);
             this.flowLayoutPanel1.Name = "flowLayoutPanel1";
@@ -206,20 +213,28 @@
             // button10
             // 
             this.button10.Cursor = System.Windows.Forms.Cursors.Hand;
+            this.button10.Font = new System.Drawing.Font("Segoe UI", 14F);
             this.button10.Location = new System.Drawing.Point(3, 3);
             this.button10.Name = "button10";
             this.button10.Size = new System.Drawing.Size(36, 36);
             this.button10.TabIndex = 0;
+            this.button10.Text = "+";
+            this.button10.TextAlign = System.Drawing.ContentAlignment.TopCenter;
             this.button10.UseVisualStyleBackColor = true;
+            this.button10.Click += new System.EventHandler(this.button10_Click);
             // 
             // button11
             // 
             this.button11.Cursor = System.Windows.Forms.Cursors.Hand;
+            this.button11.Font = new System.Drawing.Font("Segoe UI", 14F);
             this.button11.Location = new System.Drawing.Point(3, 45);
             this.button11.Name = "button11";
             this.button11.Size = new System.Drawing.Size(36, 36);
             this.button11.TabIndex = 3;
+            this.button11.Text = "-";
+            this.button11.TextAlign = System.Drawing.ContentAlignment.TopCenter;
             this.button11.UseVisualStyleBackColor = true;
+            this.button11.Click += new System.EventHandler(this.button11_Click);
             // 
             // AnT
             // 
@@ -242,16 +257,17 @@
             this.AnT.TabIndex = 6;
             this.AnT.MouseMove += new System.Windows.Forms.MouseEventHandler(this.AnT_MouseMove);
             // 
-            // checkedListBox1
+            // LayersControl
             // 
-            this.checkedListBox1.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            this.LayersControl.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.checkedListBox1.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            this.checkedListBox1.FormattingEnabled = true;
-            this.checkedListBox1.Location = new System.Drawing.Point(901, 31);
-            this.checkedListBox1.Name = "checkedListBox1";
-            this.checkedListBox1.Size = new System.Drawing.Size(217, 344);
-            this.checkedListBox1.TabIndex = 7;
+            this.LayersControl.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+            this.LayersControl.FormattingEnabled = true;
+            this.LayersControl.Location = new System.Drawing.Point(901, 31);
+            this.LayersControl.Name = "LayersControl";
+            this.LayersControl.Size = new System.Drawing.Size(217, 334);
+            this.LayersControl.TabIndex = 7;
+            this.LayersControl.SelectedValueChanged += new System.EventHandler(this.LayersControl_SelectedValueChanged);
             // 
             // RenderTimer
             // 
@@ -301,6 +317,16 @@
             this.linkLabel1.Text = "Поменять";
             this.linkLabel1.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.linkLabel1_LinkClicked);
             // 
+            // button4
+            // 
+            this.button4.Cursor = System.Windows.Forms.Cursors.Hand;
+            this.button4.Location = new System.Drawing.Point(3, 129);
+            this.button4.Name = "button4";
+            this.button4.Size = new System.Drawing.Size(36, 36);
+            this.button4.TabIndex = 5;
+            this.button4.UseVisualStyleBackColor = true;
+            this.button4.Click += new System.EventHandler(this.button4_Click);
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
@@ -309,7 +335,7 @@
             this.Controls.Add(this.linkLabel1);
             this.Controls.Add(this.label1);
             this.Controls.Add(this.color1);
-            this.Controls.Add(this.checkedListBox1);
+            this.Controls.Add(this.LayersControl);
             this.Controls.Add(this.AnT);
             this.Controls.Add(this.flowLayoutPanel1);
             this.Controls.Add(this.menuStrip1);
@@ -349,13 +375,14 @@
         private System.Windows.Forms.Button button10;
         private System.Windows.Forms.Button button11;
         private Tao.Platform.Windows.SimpleOpenGlControl AnT;
-        private System.Windows.Forms.CheckedListBox checkedListBox1;
+        private System.Windows.Forms.CheckedListBox LayersControl;
         private System.Windows.Forms.Timer RenderTimer;
         private System.Windows.Forms.ColorDialog changeColor;
         private System.Windows.Forms.Panel color1;
         private System.Windows.Forms.Panel color2;
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.LinkLabel linkLabel1;
+        private System.Windows.Forms.Button button4;
     }
 }
 
