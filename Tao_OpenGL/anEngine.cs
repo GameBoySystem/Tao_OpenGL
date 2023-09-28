@@ -96,14 +96,16 @@ namespace Tao_OpenGL
         }
     }
 
+    // ===================================================================================================
+    // ===================================================================================================
     public class anLayer
     {
         // размеры экранной области 
         public int Width, Heigth;
         // массив, представляющий область рисунка (координаты пикселя и его цвет), 
-        private float[,,] DrawPlace;
+        private int[,,] DrawPlace;
         // который будет хранить растровые данные для данного слоя 
-        public float[,,] GetDrawingPlace() { return DrawPlace; }
+        public int[,,] GetDrawingPlace() { return DrawPlace; }
         // флаг видимости слоя: true - видимый, false - невидимый 
         private bool isVisible;
         // текущий установленный цвет 
@@ -118,7 +120,7 @@ namespace Tao_OpenGL
             // создаем в памяти массив, соответствующий размерам рисунка 
             // каждая точка на плоскости массива будет иметь 3 составляющие цвета 
             // + 4 ячейка - флаг, о том что данный пиксель пуст (или полностью прозрачен) 
-            DrawPlace = new float[Width, Heigth, 4];
+            DrawPlace = new int[Width, Heigth, 4];
             // проходим по всей плоскости и устанавливаем всем точкам флаг, 
             // сигнализирующий, что они прозрачны 
             for (int ax = 0; ax < Width; ax++)
@@ -189,12 +191,12 @@ namespace Tao_OpenGL
                         if (!(ret.R == 255 && ret.G == 0 && ret.B == 0))
                         {
                             // заполняем данный пиксель соответствующим из маски, используя активный цвет 
-                            DrawPlace[ax, bx, 0] = (float)(Convert.ToDouble(ActiveColor.R) / 255);
-                            //Console.WriteLine(DrawPlace[ax, bx, 0]);
-                            //Console.WriteLine(DrawPlace[ax, bx, 1]);
-                            //Console.WriteLine(DrawPlace[ax, bx, 2]);
-                            DrawPlace[ax, bx, 1] = (float)(Convert.ToDouble(ActiveColor.G) / 255);
-                            DrawPlace[ax, bx, 2] = (float)(Convert.ToDouble(ActiveColor.B) / 255);
+                            DrawPlace[ax, bx, 0] = ActiveColor.R;
+                            Console.WriteLine(DrawPlace[ax, bx, 0]);
+                            Console.WriteLine(DrawPlace[ax, bx, 1]);
+                            Console.WriteLine(DrawPlace[ax, bx, 2]);
+                            DrawPlace[ax, bx, 1] = ActiveColor.G;
+                            DrawPlace[ax, bx, 2] = ActiveColor.B;
                             DrawPlace[ax, bx, 3] = 0;
                         }
                     }
@@ -218,7 +220,10 @@ namespace Tao_OpenGL
                     if (DrawPlace[ax, bx, 3] != 1)
                     {
                         // устанавливаем заданный в ней цвет 
-                        Gl.glColor3f(DrawPlace[ax, bx, 0], DrawPlace[ax, bx, 1], DrawPlace[ax, bx, 2]);
+                        Gl.glColor3f(
+                            (float)(Convert.ToDouble(DrawPlace[ax, bx, 0]) / 255),
+                            (float)(Convert.ToDouble(DrawPlace[ax, bx, 1]) / 255),
+                            (float)(Convert.ToDouble(DrawPlace[ax, bx, 2]) / 255));
                         // и выводим ее на экран 
                         Gl.glVertex2i(ax, bx);
                     }
@@ -239,7 +244,8 @@ namespace Tao_OpenGL
         }
     }
 
-
+    // ===================================================================================================
+    // ===================================================================================================
     // класс, реализующий "ядро" нашего растрового редактора. 
     public class anEngine
     {
@@ -345,6 +351,67 @@ namespace Tao_OpenGL
 
                 // удаляем запись о слое 
                 Layers.RemoveAt(nom);
+            }
+        }
+        // получение финального изображения
+        public Bitmap GetFinalImage()
+        {
+            // заготовка результирующего изображения 
+            Bitmap resaultBitmap = new Bitmap(picture_size_x, picture_size_y);
+            // данное решение также не является оптимальным по быстродействию,
+            // но при этом является самым простым способом решения задачи 
+            for (int ax = 0; ax < Layers.Count; ax++)
+            {
+                // получаем массив пикселей данного слоя 
+                int[,,] tmp_layer_data = ((anLayer)Layers[ax]).GetDrawingPlace();
+                // пройдем двумя циклами по информации о пикселях данного слоя
+                for (int a = 0; a < picture_size_x; a++)
+                {
+                    for (int b = 0; b < picture_size_y; b++)
+                    {
+                        // в случае, если пиксель не помечен как "прозрачный", 
+                        if (tmp_layer_data[a, b, 3] != 1)
+                        {
+                            // устанавливаем данный пиксель на результирующее изображение
+                            resaultBitmap.SetPixel(a, b, Color.FromArgb(tmp_layer_data[a, b, 0], tmp_layer_data[a, b, 1], tmp_layer_data[a, b, 2]));
+                        }
+                        else
+                        {
+                            if (ax == 0) // нулевой слой - необходимо закрасить белым отсутствующие пиксели
+                            {
+                                // закрашиваем белым цветом
+                                resaultBitmap.SetPixel(a, b, Color.FromArgb(255, 255, 255));
+                            }
+                        }
+                    }
+                }
+
+            }
+            // поворачиваем изображение для корректного отображения 
+            resaultBitmap.RotateFlip(RotateFlipType.Rotate180FlipX);
+            // возвращаем результат 
+            return resaultBitmap;
+        }
+        // получение изображения для главного слоя 
+        public void SetImageToMainLayer(Bitmap layer)
+        {
+            // поворачиваем изображение (чтобы оно корректно отображалось в области редактирования). 
+            layer.RotateFlip(RotateFlipType.Rotate180FlipX);
+            // проходим 2-мя циклами по всем пикселям изображения, загруженного в класс Bitmap 
+            // получая цвет пикселя, устанавливаем его в текущий слой с помощью функции Drawing 
+            // данный алгоритм является крайне медленным, но при этом и крайне простым. 
+            // оптимальным решением здесь будет написание собственного загрузчика файлов изображений 
+            // что даст возможность без "посредников" получать массив значений пикселей изображений 
+            // но данная задача является на много более сложной, а для обучения мы идем более легкими путями 
+            for (int ax = 0; ax < layer.Width; ax++)
+            {
+                for (int bx = 0; bx < layer.Height; bx++)
+                {
+                    // получение цвета пикселя изображения 
+                    SetColor(layer.GetPixel(ax, bx));
+                    // отрисовка данного пикселя в слое 
+                    Drawing(ax, bx);
+                }
             }
         }
     }

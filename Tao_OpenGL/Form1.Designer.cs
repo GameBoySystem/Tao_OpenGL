@@ -57,6 +57,10 @@
             this.label1 = new System.Windows.Forms.Label();
             this.linkLabel1 = new System.Windows.Forms.LinkLabel();
             this.button4 = new System.Windows.Forms.Button();
+            this.openFileDialog1 = new System.Windows.Forms.OpenFileDialog();
+            this.saveFileDialog1 = new System.Windows.Forms.SaveFileDialog();
+            this.загрузитьФайлToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.сохранитьToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.menuStrip1.SuspendLayout();
             this.flowLayoutPanel1.SuspendLayout();
             this.flowLayoutPanel2.SuspendLayout();
@@ -80,6 +84,8 @@
             // 
             this.файлToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.новыйРисунокToolStripMenuItem,
+            this.загрузитьФайлToolStripMenuItem,
+            this.сохранитьToolStripMenuItem,
             this.выходToolStripMenuItem});
             this.файлToolStripMenuItem.Name = "файлToolStripMenuItem";
             this.файлToolStripMenuItem.Size = new System.Drawing.Size(59, 24);
@@ -88,14 +94,16 @@
             // новыйРисунокToolStripMenuItem
             // 
             this.новыйРисунокToolStripMenuItem.Name = "новыйРисунокToolStripMenuItem";
-            this.новыйРисунокToolStripMenuItem.Size = new System.Drawing.Size(201, 26);
+            this.новыйРисунокToolStripMenuItem.Size = new System.Drawing.Size(224, 26);
             this.новыйРисунокToolStripMenuItem.Text = "Новый рисунок";
+            this.новыйРисунокToolStripMenuItem.Click += new System.EventHandler(this.новыйРисунокToolStripMenuItem_Click);
             // 
             // выходToolStripMenuItem
             // 
             this.выходToolStripMenuItem.Name = "выходToolStripMenuItem";
-            this.выходToolStripMenuItem.Size = new System.Drawing.Size(201, 26);
+            this.выходToolStripMenuItem.Size = new System.Drawing.Size(224, 26);
             this.выходToolStripMenuItem.Text = "Выход";
+            this.выходToolStripMenuItem.Click += new System.EventHandler(this.выходToolStripMenuItem_Click);
             // 
             // инструментыToolStripMenuItem
             // 
@@ -327,6 +335,24 @@
             this.button4.UseVisualStyleBackColor = true;
             this.button4.Click += new System.EventHandler(this.button4_Click);
             // 
+            // openFileDialog1
+            // 
+            this.openFileDialog1.FileName = "openFileDialog1";
+            // 
+            // загрузитьФайлToolStripMenuItem
+            // 
+            this.загрузитьФайлToolStripMenuItem.Name = "загрузитьФайлToolStripMenuItem";
+            this.загрузитьФайлToolStripMenuItem.Size = new System.Drawing.Size(224, 26);
+            this.загрузитьФайлToolStripMenuItem.Text = "Загрузить файл";
+            this.загрузитьФайлToolStripMenuItem.Click += new System.EventHandler(this.загрузитьФайлToolStripMenuItem_Click);
+            // 
+            // сохранитьToolStripMenuItem
+            // 
+            this.сохранитьToolStripMenuItem.Name = "сохранитьToolStripMenuItem";
+            this.сохранитьToolStripMenuItem.Size = new System.Drawing.Size(224, 26);
+            this.сохранитьToolStripMenuItem.Text = "Сохранить";
+            this.сохранитьToolStripMenuItem.Click += new System.EventHandler(this.сохранитьToolStripMenuItem_Click);
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
@@ -383,6 +409,10 @@
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.LinkLabel linkLabel1;
         private System.Windows.Forms.Button button4;
+        private System.Windows.Forms.ToolStripMenuItem загрузитьФайлToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem сохранитьToolStripMenuItem;
+        private System.Windows.Forms.OpenFileDialog openFileDialog1;
+        private System.Windows.Forms.SaveFileDialog saveFileDialog1;
     }
 }
 

@@ -231,6 +231,197 @@ namespace Tao_OpenGL
         {
             button4_Click(sender, e);
         }
+
+        private void новыйРисунокToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            // вызываем диалог подтверждения 
+            DialogResult result = MessageBox.Show(
+                "В данный момент проект уже начат, сохранить изменения перед закрытием проекта?",
+                "Внимание!",
+                MessageBoxButtons.YesNoCancel);
+            // если отказ пользователя
+            // в зависимости от результата нажатия кнопки пользователем в окне MessageBox 
+            switch (result)
+            {
+                case DialogResult.No:
+                    {
+                        // просто создаем чистый проект 
+                        ProgrammDrawingEngine = new anEngine(AnT.Width, AnT.Height, AnT.Width, AnT.Height);
+                        // очищаем информацию о добавляемых ранее слоях 
+                        LayersControl.Items.Clear();
+                        // по новой инициализируем нулевой слой: 
+                        // текущий активный слой 
+                        ActiveLayer = 0;
+                        // счетчик слоев 
+                        LayersCount = 1;
+                        // счетчик всех создаваемых слоев для генерации имен 
+                        AllLayrsCount = 1;
+                        // добавление элемента, отвечающего за управления главным слоем в объект LayersControl 
+                        LayersControl.Items.Add("Главный слой", true);
+                        break;
+                    }
+                case DialogResult.Cancel:
+                    {
+                        // возвращаемся 
+                        return;
+                    }
+                case DialogResult.Yes:
+                    {
+                        // открываем окно сохранения файла, и если имя файла указано
+                        // и DialogResult вернуло сигнал об успешном нажатии кнопки ОК 
+                        if (saveFileDialog1.ShowDialog() == DialogResult.OK)
+                        {
+                            // получаем результирующее изображение слоя 
+                            Bitmap ToSave = ProgrammDrawingEngine.GetFinalImage();
+                            // сохраняем, используя имя файла, указанное в диалоговом окне сохранения файла 
+                            ToSave.Save(saveFileDialog1.FileName, System.Drawing.Imaging.ImageFormat.Jpeg);
+                            // сохранили - начинаем новый проект: 
+                            // создаем новый объект "движка" программы 
+                            ProgrammDrawingEngine = new anEngine(AnT.Width, AnT.Height, AnT.Width, AnT.Height);
+                            // очищаем информацию о добавляемых ранее слоях 
+                            LayersControl.Items.Clear();
+                            // по новой инициализируем нулевой слой: 
+                            // текущий активный слой 
+                            ActiveLayer = 0;
+                            // счетчик слоев 
+                            LayersCount = 1;
+                            // счетчик всех создаваемых слоев для генерации имен 
+                            AllLayrsCount = 1;
+                            // добавление элемента, отвечающего за управления главным слоем в объект LayersControl 
+                            LayersControl.Items.Add("Главный слой", true);
+                        }
+                        else
+                        {
+                            // если сохранение не завершилось нормально (скорее всего пользователь закрыл окно сохранения файла 
+                            // возвращаемся в проект 
+                            return;
+                        }
+                        break;
+                    }
+            }
+        }
+
+        private void загрузитьФайлToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            // вызываем диалог подтверждения 
+            DialogResult reslt = MessageBox.Show(
+                "В данный момент проект уже начат, сохранить изменения перед закрытием проекта?",
+                "Внимание!", MessageBoxButtons.YesNoCancel);
+            // если отказ пользователя 
+            switch (reslt)
+            {
+                case DialogResult.No:
+                    {
+                        // просто создаем проект, подгружая изображения 
+                        if (openFileDialog1.ShowDialog() == DialogResult.OK)
+                        {
+                            // проверяем существование файла 
+                            if (System.IO.File.Exists(openFileDialog1.FileName))
+                            {
+                                // загружаем изображение в экземпляр класса Bitmap 
+                                Bitmap ToLoad = new Bitmap(openFileDialog1.FileName);
+                                // если размер изображения не корректен
+                                if (ToLoad.Width > AnT.Width || ToLoad.Height > AnT.Height)
+                                {
+                                    // сообщаем пользователю об ошибке 
+                                    MessageBox.Show(
+                                        "Извините, но размер изображения превышает размеры области рисования",
+                                        "Внимание", MessageBoxButtons.OK, MessageBoxIcon.Stop);
+                                    // возвращаемся к функции 
+                                    return;
+                                }
+                                // если размер был меньше области редактирования программы 
+                                // создаем новый экземпляр класса anEngine 
+                                ProgrammDrawingEngine = new anEngine(AnT.Width, AnT.Height, AnT.Width, AnT.Height);
+                                // копируем изображение в нижний левый угол рабочей области 
+                                ProgrammDrawingEngine.SetImageToMainLayer(ToLoad);
+                                // очищаем информацию о добавляемых ранее слоях 
+                                LayersControl.Items.Clear();
+                                // по новой инициализируем нулевой слой:
+                                // текущий активный слой 
+                                ActiveLayer = 0;
+                                // счетчик слоев 
+                                LayersCount = 1;
+                                // счетчик всех создаваемых слоев для генерации имен 
+                                AllLayrsCount = 1;
+                                // добавление элемента, отвечающего за управления главным слоем в объект LayersControl 
+                                LayersControl.Items.Add("Главный слой", true);
+                            }
+                        }
+                        break;
+                    }
+                case DialogResult.Cancel:
+                    {
+                        // возвращаемся
+                        return;
+                    }
+                case DialogResult.Yes:
+                    {
+                        // открываем окно сохранения файла, и если имя файла указано
+                        // и DialogResult вернуло сигнал об успешном нажатии кнопки ОК 
+                        if (saveFileDialog1.ShowDialog() == DialogResult.OK)
+                        {
+                            // получаем результирующее изображение слоя 
+                            Bitmap ToSave = ProgrammDrawingEngine.GetFinalImage();
+                            // сохраняем, используя имя файла, указанное в диалоговом окне сохранения файла 
+                            ToSave.Save(saveFileDialog1.FileName, System.Drawing.Imaging.ImageFormat.Jpeg);
+                            // сохранили - начинаем новый проект: // просто создаем проект, подгружая изображения 
+                            if (openFileDialog1.ShowDialog() == DialogResult.OK)
+                            {
+                                // проверяем существование файла 
+                                if (System.IO.File.Exists(openFileDialog1.FileName))
+                                {
+                                    // загружаем изображение в экземпляр класса Bitmap
+                                    Bitmap ToLoad = new Bitmap(openFileDialog1.FileName);
+                                    // если размер изображения не корректен 
+                                    if (ToLoad.Width > AnT.Width || ToLoad.Height > AnT.Height)
+                                    {
+                                        // сообщаем пользователю об ошибке 
+                                        MessageBox.Show("Извините, но размер изображения превышает размеры области рисования",
+                                            "Внимание", MessageBoxButtons.OK, MessageBoxIcon.Stop);
+                                        // возвращаемся и функции 
+                                        return;
+                                    }
+                                    // если размер был меньше области редактирования программы 
+                                    // создаем новый экземпляр класса anEngine 
+                                    ProgrammDrawingEngine = new anEngine(AnT.Width, AnT.Height, AnT.Width, AnT.Height);
+                                    // копируем изображение в нижний левый угол рабочей области 
+                                    ProgrammDrawingEngine.SetImageToMainLayer(ToLoad);
+                                    // очищаем информацию о добавляемых ранее слоях 
+                                    LayersControl.Items.Clear();
+                                    // по новой инициализируем нулевой слой: // текущий активный слой 
+                                    ActiveLayer = 0;
+                                    // счетчик слоев 
+                                    LayersCount = 1;
+                                    // счетчик всех создаваемых слоев для генерации имен 
+                                    AllLayrsCount = 1;
+                                    // добавление элемента, отвечающего за управления главным слоем в объект LayersControl 
+                                    LayersControl.Items.Add("Главный слой", true);
+                                }
+                            }
+                            break;
+                        }
+                        else
+                        {
+                            return; 
+                        }
+                    }
+            }
+        }
+
+        private void сохранитьToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            // открываем окно сохранения файла, и если имя файла указано и DialogResult вернуло сигнал об успешном нажатии кнопки ОК 
+            if (saveFileDialog1.ShowDialog() == DialogResult.OK) { 
+                // получаем результирующее изображение слоя 
+                Bitmap ToSave = ProgrammDrawingEngine.GetFinalImage(); 
+                // сохраняем используя имя файла указанное в диалоговом окне сохранения файла 
+                ToSave.Save(saveFileDialog1.FileName, System.Drawing.Imaging.ImageFormat.Jpeg); }
+        }
+
+        private void выходToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            Application.Exit();
+        }
     }
 }
-
